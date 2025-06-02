@@ -40,7 +40,3 @@ out/
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
-
-# Spring Boot
-*.jar
-*.zip
