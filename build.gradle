@@ -9,7 +9,10 @@ version = file("VERSION").text.trim()
 
 bootJar {
 	archiveBaseName = "app"
-	archiveVersion = version
+	// 환경변수가 있으면 사용, 없으면 VERSION 파일에서 읽어옴
+	def versionFromEnv = System.getenv("VERSION")
+	def versionFromFile = file("VERSION").text.trim()
+	archiveVersion = versionFromEnv ?: versionFromFile
 }
 
 jar {
