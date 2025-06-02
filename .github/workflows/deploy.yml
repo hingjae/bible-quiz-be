@@ -50,6 +50,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Upload app.zip to S3
+        run: |
+          aws s3 cp app.zip s3://elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}/$APPLICATION_NAME/$VERSION.zip
+
       - name: Deploy to Elastic Beanstalk
         run: |
           aws elasticbeanstalk create-application-version \
@@ -60,7 +64,3 @@ jobs:
           aws elasticbeanstalk update-environment \
             --environment-name $ENVIRONMENT_NAME \
             --version-label $VERSION
-
-      - name: Upload app.zip to S3
-        run: |
-          aws s3 cp app.zip s3://elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}/$APPLICATION_NAME/$VERSION.zip
