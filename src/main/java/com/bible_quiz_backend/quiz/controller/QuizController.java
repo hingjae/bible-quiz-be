@@ -20,6 +20,7 @@ public class QuizController {
     public ApiResponse<QuizResponseList> getAllQuizzes(@ModelAttribute QuizSearch quizSearch){
         QuizResponseList quizResponseList = quizService.findByParam(quizSearch);
         log.info("Quizzes found with search: {}", quizSearch.getTopicId());
+        log.info("ci test");
         return ApiResponse.ok(quizResponseList);
     }
 }
