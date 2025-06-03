@@ -13,7 +13,6 @@ jobs:
     env:
       APPLICATION_NAME: bible-quiz-backend
       ENVIRONMENT_NAME: biblequiz-env
-      VERSION_FILE: VERSION
 
     steps:
       - name: Checkout code
@@ -33,7 +32,7 @@ jobs:
       - name: Build project
         run: ./gradlew clean build -x test
 
-      - name: Rename jar to app.jar
+      - name: Move app.jar to project root
         run: cp build/libs/app.jar app.jar
 
       - name: Create deployment package
@@ -41,15 +40,15 @@ jobs:
 
       - name: Upload app.zip to S3
         run: |
-          aws s3 cp "app-${{ env.VERSION_LABEL }}.zip" s3://elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}/${{ env.APPLICATION_NAME }}/app-${{ env.VERSION_LABEL }}.zip
+          aws s3 cp "app.zip" s3://elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}/${{ env.APPLICATION_NAME }}/app.zip
 
       - name: Deploy to Elastic Beanstalk
         run: |
           aws elasticbeanstalk create-application-version \
             --application-name $APPLICATION_NAME \
-            --version-label $VERSION_LABEL \
-            --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="$APPLICATION_NAME/app-${{ env.VERSION_LABEL }}.zip"
+            --version-label latest \
+            --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="$APPLICATION_NAME/app.zip"
 
           aws elasticbeanstalk update-environment \
             --environment-name $ENVIRONMENT_NAME \
-            --version-label $VERSION_LABEL
+            --version-label latest
