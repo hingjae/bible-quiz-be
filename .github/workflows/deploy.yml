@@ -25,9 +25,12 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Set version from VERSION file + Git SHA
+      - name: Set VERSION_LABEL (e.g., 1.0.0-a1b2c3d)
         id: version
-        run: echo "VERSION=$(cat $VERSION_FILE)-${GITHUB_SHA::7}" >> $GITHUB_ENV
+        run: |
+          VERSION=$(cat $VERSION_FILE)-${GITHUB_SHA::7}
+          echo "VERSION_LABEL=$VERSION" >> $GITHUB_ENV
+          echo "Version Label: $VERSION"
 
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v3
@@ -37,19 +40,19 @@ jobs:
       - name: Build project
         run: ./gradlew clean build -x test
 
-      - name: Rename jar to app.jar
+      - name: Rename jar to versioned name
         run: |
-          echo "Looking for jar: build/libs/app-$(cat $VERSION_FILE)-${GITHUB_SHA::7}.jar"
-          JAR_NAME=build/libs/app-$(cat $VERSION_FILE)-${GITHUB_SHA::7}.jar
+          JAR_NAME="build/libs/app-${{ env.VERSION_LABEL }}.jar"
           if [ ! -f "$JAR_NAME" ]; then
-            echo "JAR file not found: $JAR_NAME"
-            ls build/libs
+            echo "JAR not found: $JAR_NAME"
+            echo "Available files:"
+            ls -al build/libs
             exit 1
           fi
           cp "$JAR_NAME" app.jar
 
       - name: Create deployment package
-        run: zip -r app.zip app.jar .ebextensions
+        run: zip -r "app-${{ env.VERSION_LABEL }}.zip" app.jar .ebextensions
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -60,15 +63,15 @@ jobs:
 
       - name: Upload app.zip to S3
         run: |
-          aws s3 cp app.zip s3://elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}/$APPLICATION_NAME/$VERSION.zip
+          aws s3 cp "app-${{ env.VERSION_LABEL }}.zip" s3://elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}/${{ env.APPLICATION_NAME }}/app-${{ env.VERSION_LABEL }}.zip
 
       - name: Deploy to Elastic Beanstalk
         run: |
           aws elasticbeanstalk create-application-version \
             --application-name $APPLICATION_NAME \
-            --version-label $VERSION \
-            --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="$APPLICATION_NAME/$VERSION.zip"
+            --version-label $VERSION_LABEL \
+            --source-bundle S3Bucket="elasticbeanstalk-${{ secrets.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}",S3Key="$APPLICATION_NAME/app-${{ env.VERSION_LABEL }}.zip"
 
           aws elasticbeanstalk update-environment \
             --environment-name $ENVIRONMENT_NAME \
-            --version-label $VERSION
+            --version-label $VERSION_LABEL
