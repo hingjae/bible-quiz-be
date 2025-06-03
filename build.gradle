@@ -8,6 +8,7 @@ group = 'com'
 
 bootJar {
 	archiveBaseName = "app"
+	archiveVersion = ""
 }
 
 jar {
