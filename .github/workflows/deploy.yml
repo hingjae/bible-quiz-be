@@ -15,6 +15,12 @@ jobs:
       ENVIRONMENT_NAME: biblequiz-env
 
     steps:
+      - name: Notify Slack - Deploy started
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"🚀 *Deploy started* for `bible-quiz-backend`"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -54,3 +60,17 @@ jobs:
           aws elasticbeanstalk update-environment \
             --environment-name $ENVIRONMENT_NAME \
             --version-label latest
+
+      - name: Notify Slack - Deploy succeeded
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"✅ *Deploy succeeded* for `bible-quiz-backend`"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Slack - Deploy failed
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"❌ *Deploy failed* for `bible-quiz-backend`"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
