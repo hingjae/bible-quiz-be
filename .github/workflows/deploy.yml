@@ -39,8 +39,13 @@ jobs:
 
       - name: Rename jar to app.jar
         run: |
-          JAR_NAME=$(ls build/libs/*.jar | grep "$(cat $VERSION_FILE)-${GITHUB_SHA::7}" | head -n 1)
-          echo "Found JAR: $JAR_NAME"
+          echo "Looking for jar: build/libs/app-$(cat $VERSION_FILE)-${GITHUB_SHA::7}.jar"
+          JAR_NAME=build/libs/app-$(cat $VERSION_FILE)-${GITHUB_SHA::7}.jar
+          if [ ! -f "$JAR_NAME" ]; then
+            echo "JAR file not found: $JAR_NAME"
+            ls build/libs
+            exit 1
+          fi
           cp "$JAR_NAME" app.jar
 
       - name: Create deployment package
