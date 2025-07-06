@@ -22,4 +22,5 @@ public class QuizController {
         log.info("Quizzes found with search: {}", quizSearch.getTopicId());
         return ApiResponse.ok(quizResponseList);
     }
+
 }
