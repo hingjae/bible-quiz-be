@@ -9,6 +9,8 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: validate
+bible-quiz:
+  quiz-generator-endpoint: ${BIBLE_QUIZ_QUIZ_GENERATOR_ENDPOINT}
 server:
   port: ${SERVER_PORT}
 logging:

@@ -8,6 +8,17 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
+      credentials:
+        access-key: test
+        secret-key: test
+      sqs:
+        endpoint: http://localhost:4566
+bible-quiz:
+  quiz-generator-endpoint: http://localhost:9000/2015-03-31/functions/function/invocations
 logging:
   level:
     org.hibernate.SQL: trace
