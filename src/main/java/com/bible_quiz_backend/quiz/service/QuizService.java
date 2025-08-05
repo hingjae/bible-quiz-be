@@ -4,10 +4,12 @@ import com.bible_quiz_backend.quiz.controller.dto.QuizResponseList;
 import com.bible_quiz_backend.quiz.controller.dto.QuizSearch;
 import com.bible_quiz_backend.quiz.domain.Quiz;
 import com.bible_quiz_backend.quiz.repository.QuizRepository;
+import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,5 +22,11 @@ public class QuizService {
         PageRequest pageRequest = PageRequest.of(0, quizSearch.getSize(), Sort.by(Sort.Direction.DESC, "id"));
         List<Quiz> quizzes = quizRepository.findAllByTopic_Id(quizSearch.getTopicId(), pageRequest);
         return QuizResponseList.from(quizzes);
+    }
+
+    @Transactional
+    public void saveAllFromMessage(QuizGenerateMessage message) {
+        List<Quiz> quizzes = message.toQuizEntities();
+        quizRepository.saveAll(quizzes);
     }
 }

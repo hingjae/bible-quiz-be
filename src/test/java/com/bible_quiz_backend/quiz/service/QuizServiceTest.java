@@ -1,95 +1,55 @@
 package com.bible_quiz_backend.quiz.service;
 
-import com.bible_quiz_backend.IntegrationTest;
-import com.bible_quiz_backend.quiz.controller.dto.QuizResponse;
-import com.bible_quiz_backend.quiz.controller.dto.QuizResponseList;
-import com.bible_quiz_backend.quiz.controller.dto.QuizSearch;
 import com.bible_quiz_backend.quiz.domain.Quiz;
 import com.bible_quiz_backend.quiz.repository.QuizRepository;
-import com.bible_quiz_backend.topic.domain.Topic;
-import com.bible_quiz_backend.topic.repository.TopicRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateMessage;
+import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
-class QuizServiceTest extends IntegrationTest {
+@ExtendWith(MockitoExtension.class)
+class QuizServiceTest {
 
-    @Autowired
+    @Mock
     private QuizRepository quizRepository;
 
-    @Autowired
-    private TopicRepository topicRepository;
-
-    @Autowired
+    @InjectMocks
     private QuizService quizService;
 
-    @BeforeEach
-    void setUp() {
-        Topic topic = Topic.builder()
-                .title("Genesis")
-                .build();
-
-        Topic savedTopic = topicRepository.save(topic);
-
-        // 샘플 데이터 20개 삽입
-        List<Quiz> quizzes = IntStream.rangeClosed(1, 20).mapToObj(i -> Quiz.builder()
-                        .topic(savedTopic)
-                        .question("question " + i)
-                        .options("[\"보기1\", \"보기2\", \"보기3\", \"보기4\"]")
-                        .correctAnswer("보기")
-                        .reference("창1:" + i)
-                        .createdAt(LocalDateTime.of(2025, 5, 20, 0, 0, 0))
-                        .build())
-                .toList();
-
-        quizRepository.saveAll(quizzes);
-    }
-
-    @AfterEach
-    void clear() {
-        quizRepository.deleteAllInBatch();
-        topicRepository.deleteAllInBatch();
-    }
-
-    @DisplayName("요청한 개수만큼 퀴즈를 조회한다.")
     @Test
-    void findByParam_요청한_개수만큼_조회된다() {
-        Topic topic = topicRepository.findByTitle("Genesis").orElseThrow(EntityNotFoundException::new);
+    @DisplayName("SQS로 수신한 메시지를 List<Quiz>로 변환해서 저장한다.")
+    void saveAll_FromMessage_success() {
+        QuizGenerateMessage message = new QuizGenerateMessage("request-id-1234", getQuizzes());
 
-        // given
-        QuizSearch search = new QuizSearch(topic.getId(), 5);
+        List<Quiz> quizzes = message.toQuizEntities();
 
-        // when
-        QuizResponseList result = quizService.findByParam(search);
+        quizService.saveAllFromMessage(message);
 
-        // then
-        assertThat(result.getQuizzes()).hasSize(5)
-                .extracting(QuizResponse::getQuestion)
-                .containsExactly("question 20", "question 19", "question 18", "question 17", "question 16");
+        verify(quizRepository).saveAll(quizzes);
+
+        assertThat(quizzes).hasSize(3)
+                .extracting(Quiz::getQuestion)
+                .containsExactly(
+                        "야곱이 꿈에서 본 양 떼를 탄 숫양은 어떤 모습이었습니까?",
+                        "하나님이 야곱에게 돌아가라고 명하신 곳은 어디입니까?",
+                        "라헬이 라반의 집에서 도둑질한 것은 무엇입니까?"
+                );
     }
 
-    @DisplayName("요청한 개수가 null 이면 퀴즈 10개를 기본값으로 조회한다.")
-    @Test
-    void findByParam_개수가_null() {
-        Topic topic = topicRepository.findByTitle("Genesis").orElseThrow(EntityNotFoundException::new);
-        // given
-        QuizSearch search = new QuizSearch(topic.getId(), null);
-
-        // when
-        QuizResponseList result = quizService.findByParam(search);
-
-        // then
-        assertThat(result.getQuizzes()).hasSize(10)
-                .extracting(QuizResponse::getQuestion)
-                .containsExactly("question 20", "question 19", "question 18", "question 17", "question 16", "question 15", "question 14", "question 13", "question 12", "question 11");
+    private List<QuizGenerateResponse> getQuizzes() {
+        return List.of(
+                new QuizGenerateResponse("야곱이 꿈에서 본 양 떼를 탄 숫양은 어떤 모습이었습니까?", List.of("얼룩무늬 있는 것", "흰색 양", "검은색 양", "회색 양"), "얼룩무늬 있는 것", "창세기 31:10에 따르면 야곱은 꿈에서 양 떼를 탄 숫양이 얼룩무늬 있는 것과 점 있는 것과 아롱진 것이었다고 보았습니다.", "창31:10"),
+                new QuizGenerateResponse("하나님이 야곱에게 돌아가라고 명하신 곳은 어디입니까?", List.of("벧엘", "세겜", "가나안", "애굽"), "벧엘", "하나님은 야곱에게 벧엘로 돌아가서 거기서 제단을 쌓으라고 명하셨습니다.", "창35:1"),
+                new QuizGenerateResponse("라헬이 라반의 집에서 도둑질한 것은 무엇입니까?", List.of("드라빔", "금", "은", "보석"), "드라빔", "창세기 31:19에 따르면 라헬은 그의 아버지의 드라빔을 도둑질했습니다.", "창31:19")
+        );
     }
 }
