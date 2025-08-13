@@ -54,6 +54,13 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:mysql'
+
+	// https://mvnrepository.com/artifact/software.amazon.awssdk/lambda
+//	implementation 'software.amazon.awssdk:lambda:2.32.19'
+//	implementation 'software.amazon.awssdk:netty-nio-client:2.25.54' // 비동기 HTTP 클라이언트
+
+	// https://mvnrepository.com/artifact/software.amazon.awssdk/sqs
+	implementation 'software.amazon.awssdk:sqs:2.32.20'
 }
 
 tasks.named('test') {

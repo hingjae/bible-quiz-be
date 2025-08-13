@@ -9,17 +9,11 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: validate
-  cloud:
-    aws:
-      region:
-        static: ap-northeast-2
-      credentials:
-        access-key: test
-        secret-key: test
-      sqs:
-        endpoint: http://localhost:4566
-bible-quiz:
-  quiz-generator-endpoint: http://localhost:9000/2015-03-31/functions/function/invocations
+aws:
+  queue-region: ${AWS_QUEUE_REGION}
+  access-key: ${AWS_ACCESS_KEY}
+  secret-key: ${AWS_SECRET_KEY}
+  quiz-request-queue-url: ${AWS_QUIZ_REQUEST_QUEUE_URL}
 logging:
   level:
     org.hibernate.SQL: debug

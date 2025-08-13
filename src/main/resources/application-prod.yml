@@ -9,8 +9,11 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: validate
-bible-quiz:
-  quiz-generator-endpoint: ${BIBLE_QUIZ_QUIZ_GENERATOR_ENDPOINT}
+aws:
+  queue-region: ${AWS_QUEUE_REGION}
+  access-key: ${AWS_ACCESS_KEY}
+  secret-key: ${AWS_SECRET_KEY}
+  quiz-request-queue-url: ${AWS_QUIZ_REQUEST_QUEUE_URL}
 server:
   port: ${SERVER_PORT}
 logging:

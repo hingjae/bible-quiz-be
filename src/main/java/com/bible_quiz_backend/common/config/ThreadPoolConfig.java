@@ -2,6 +2,7 @@ package com.bible_quiz_backend.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
@@ -9,6 +10,7 @@ import java.util.concurrent.Executor;
 @Configuration
 public class ThreadPoolConfig {
 
+    @Profile("local")
     @Bean(name = "quizGenerateRequestExecutor")
     public Executor quizGenerateRequestExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
