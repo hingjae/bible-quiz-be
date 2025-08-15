@@ -1,5 +1,6 @@
 package com.bible_quiz_backend.quiz.domain;
 
+import com.bible_quiz_backend.common.config.jpa.BaseTimeEntity;
 import com.bible_quiz_backend.topic.domain.Topic;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -7,13 +8,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Quiz {
+public class Quiz extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +34,8 @@ public class Quiz {
 
     private String reference;
 
-    @Column(name = "created_at", columnDefinition = "timestamp default current_timestamp")
-    private LocalDateTime createdAt;
-
     @Builder
-    public Quiz(Long id, Topic topic, String question, String options, String correctAnswer, String correctAnswerReason, String reference, LocalDateTime createdAt) {
+    public Quiz(Long id, Topic topic, String question, String options, String correctAnswer, String correctAnswerReason, String reference) {
         this.id = id;
         this.topic = topic;
         this.question = question;
@@ -46,7 +43,6 @@ public class Quiz {
         this.correctAnswer = correctAnswer;
         this.correctAnswerReason = correctAnswerReason;
         this.reference = reference;
-        this.createdAt = createdAt;
     }
 
     @Override
