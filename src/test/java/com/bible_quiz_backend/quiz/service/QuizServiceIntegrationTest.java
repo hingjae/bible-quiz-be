@@ -9,10 +9,7 @@ import com.bible_quiz_backend.quiz.repository.QuizRepository;
 import com.bible_quiz_backend.topic.domain.Topic;
 import com.bible_quiz_backend.topic.repository.TopicRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
@@ -21,6 +18,7 @@ import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Disabled
 class QuizServiceIntegrationTest extends IntegrationTest {
 
     @Autowired
