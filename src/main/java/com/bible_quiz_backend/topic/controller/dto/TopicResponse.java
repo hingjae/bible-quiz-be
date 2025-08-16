@@ -1,6 +1,6 @@
 package com.bible_quiz_backend.topic.controller.dto;
 
-import com.bible_quiz_backend.topic.domain.Topic;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -9,8 +9,12 @@ public class TopicResponse {
 
     private final String title;
 
-    public TopicResponse(Topic topic) {
-        this.id = topic.getId();
-        this.title = topic.getTitle();
+    private final String bookTitle;
+
+    @Builder
+    public TopicResponse(Long id, String title, String bookTitle) {
+        this.id = id;
+        this.title = title;
+        this.bookTitle = bookTitle;
     }
 }

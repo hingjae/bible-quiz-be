@@ -45,7 +45,6 @@ class QuizServiceIntegrationTest extends IntegrationTest {
                         .options("[\"보기1\", \"보기2\", \"보기3\", \"보기4\"]")
                         .correctAnswer("보기")
                         .reference("창1:" + i)
-                        .createdAt(LocalDateTime.of(2025, 5, 20, 0, 0, 0))
                         .build())
                 .toList();
 

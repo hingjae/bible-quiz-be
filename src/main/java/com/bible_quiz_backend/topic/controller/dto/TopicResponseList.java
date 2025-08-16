@@ -9,9 +9,7 @@ import java.util.List;
 public class TopicResponseList {
     private final List<TopicResponse> topics;
 
-    public TopicResponseList(List<Topic> topics) {
-        this.topics = topics.stream()
-                .map(TopicResponse::new)
-                .toList();
+    public TopicResponseList(List<TopicResponse> topics) {
+        this.topics = topics;
     }
 }
