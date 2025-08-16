@@ -5,6 +5,9 @@ import com.bible_quiz_backend.quiz.controller.dto.QuizSearch;
 import com.bible_quiz_backend.quiz.domain.Quiz;
 import com.bible_quiz_backend.quiz.repository.QuizRepository;
 import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateMessage;
+import com.bible_quiz_backend.quizgenerate.mapper.QuizGenerateMapper;
+import com.bible_quiz_backend.topic.domain.Topic;
+import com.bible_quiz_backend.topic.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,6 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuizService {
     private final QuizRepository quizRepository;
+    private final TopicRepository topicRepository;
+    private final QuizGenerateMapper quizGenerateMapper;
 
     public QuizResponseList findByParam(QuizSearch quizSearch) {
         PageRequest pageRequest = PageRequest.of(0, quizSearch.getSize(), Sort.by(Sort.Direction.DESC, "id"));
@@ -26,7 +31,10 @@ public class QuizService {
 
     @Transactional
     public void saveAllFromMessage(QuizGenerateMessage message) {
-        List<Quiz> quizzes = message.toQuizEntities();
+        Topic topic = topicRepository.getReferenceById(message.topicId());
+
+        List<Quiz> quizzes = quizGenerateMapper.toQuizzes(topic, message);
+
         quizRepository.saveAll(quizzes);
     }
 }
