@@ -1,7 +1,7 @@
 package com.bible_quiz_backend.quizgenerate.service;
 
 import com.bible_quiz_backend.common.utils.JsonUtils;
-import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateRequest;
+import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateMessageProduceBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,8 +17,8 @@ public class QuizGenerateProducer {
     @Value("${aws.quiz-request-queue-url}")
     private String queueUrl;
 
-    public void send(QuizGenerateRequest request) {
-        String messageBody = JsonUtils.toJson(request);
+    public void send(QuizGenerateMessageProduceBody quizGenerateMessageProduceBody) {
+        String messageBody = JsonUtils.toJson(quizGenerateMessageProduceBody);
         sqs.sendMessage(builder -> builder.queueUrl(queueUrl).messageBody(messageBody))
                 .thenAccept(response -> log.info("SQS accepted message: {}", response.messageId()))
                 .exceptionally(ex -> {
