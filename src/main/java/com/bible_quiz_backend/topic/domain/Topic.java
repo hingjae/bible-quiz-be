@@ -19,13 +19,17 @@ public class Topic extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String question;
+
+    private String bookFileName;
+
     private String bookTitle;
 
-    private String title;
-
     @Builder
-    public Topic(Long id, String title) {
+    public Topic(Long id, String question, String bookFileName, String bookTitle) {
         this.id = id;
-        this.title = title;
+        this.question = question;
+        this.bookFileName = bookFileName;
+        this.bookTitle = bookTitle;
     }
 }
