@@ -2,10 +2,10 @@ package com.bible_quiz_backend.quizgenerate.dto;
 
 public record QuizGenerateMessageProduceBody(
         Long topicId,
-        String bookTitle,
+        String bookFileName,
         String question
 ) {
-    public static QuizGenerateMessageProduceBody of (Long topicId, String bookTitle, String question) {
-        return new QuizGenerateMessageProduceBody(topicId, bookTitle, question);
+    public static QuizGenerateMessageProduceBody of(Long topicId, String bookFileName, String question) {
+        return new QuizGenerateMessageProduceBody(topicId, bookFileName, question);
     }
 }

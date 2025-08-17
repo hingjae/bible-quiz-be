@@ -16,8 +16,8 @@ public class QuizGenerateMapper {
     public QuizGenerateMessageProduceBody toQuizGenerateMessageBody(Topic topic) {
         return QuizGenerateMessageProduceBody.of(
                 topic.getId(),
-                topic.getBookTitle(),
-                topic.getTitle()
+                topic.getBookFileName(),
+                topic.getQuestion()
         );
     }
 

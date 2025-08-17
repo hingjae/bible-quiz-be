@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @Disabled
 class TopicServiceTest extends IntegrationTest {
 
@@ -49,9 +47,9 @@ class TopicServiceTest extends IntegrationTest {
     void findAll() {
         TopicResponseList topicsResponseList = topicService.findAll();
 
-        Assertions.assertThat(topicsResponseList.getTopics())
+        Assertions.assertThat(topicsResponseList.topics())
                 .hasSize(3)
-                .extracting(TopicResponse::getTitle)
+                .extracting(TopicResponse::title)
                 .containsExactly("Genesis", "John", "Luke");
     }
 }
