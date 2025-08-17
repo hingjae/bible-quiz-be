@@ -11,9 +11,11 @@ spring:
       ddl-auto: validate
 aws:
   queue-region: ${AWS_QUEUE_REGION}
+  queue-name: ${AWS_QUEUE_NAME}
   access-key: ${AWS_ACCESS_KEY}
   secret-key: ${AWS_SECRET_KEY}
   quiz-request-queue-url: ${AWS_QUIZ_REQUEST_QUEUE_URL}
+  quiz-result-queue-url: ${AWS_QUIZ_RESULT_QUEUE_URL}
 server:
   port: ${SERVER_PORT}
 logging:

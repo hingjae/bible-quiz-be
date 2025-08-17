@@ -17,7 +17,7 @@ public class QuizGenerateResultListener {
     private final QuizService quizService;
 
     @Transactional
-    @SqsListener("quiz-result-queue")
+    @SqsListener("${aws.queue-name}")
     public void receiveMessage(String message) {
         log.info("message received: {}", message);
 
