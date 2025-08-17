@@ -2,8 +2,9 @@ use quizdb;
 
 CREATE TABLE topic (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255),
     book_title VARCHAR(255),
+    question VARCHAR(255),
+    book_file_name VARCHAR(255),
     created_at DATETIME NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
