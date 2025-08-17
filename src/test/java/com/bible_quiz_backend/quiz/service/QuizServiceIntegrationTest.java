@@ -33,7 +33,7 @@ class QuizServiceIntegrationTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         Topic topic = Topic.builder()
-                .title("Genesis")
+                .bookTitle("Genesis")
                 .build();
 
         Topic savedTopic = topicRepository.save(topic);
@@ -60,7 +60,7 @@ class QuizServiceIntegrationTest extends IntegrationTest {
     @DisplayName("요청한 개수만큼 퀴즈를 조회한다.")
     @Test
     void findByParam_요청한_개수만큼_조회된다() {
-        Topic topic = topicRepository.findByTitle("Genesis").orElseThrow(EntityNotFoundException::new);
+        Topic topic = topicRepository.findByQuestion("Genesis").orElseThrow(EntityNotFoundException::new);
 
         // given
         QuizSearch search = new QuizSearch(topic.getId(), 5);
@@ -77,7 +77,7 @@ class QuizServiceIntegrationTest extends IntegrationTest {
     @DisplayName("요청한 개수가 null 이면 퀴즈 10개를 기본값으로 조회한다.")
     @Test
     void findByParam_개수가_null() {
-        Topic topic = topicRepository.findByTitle("Genesis").orElseThrow(EntityNotFoundException::new);
+        Topic topic = topicRepository.findByQuestion("Genesis").orElseThrow(EntityNotFoundException::new);
         // given
         QuizSearch search = new QuizSearch(topic.getId(), null);
 

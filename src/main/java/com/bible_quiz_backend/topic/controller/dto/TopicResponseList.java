@@ -4,6 +4,5 @@ import lombok.Getter;
 
 import java.util.List;
 
-@Getter
 public record TopicResponseList(List<TopicResponse> topics) {
 }

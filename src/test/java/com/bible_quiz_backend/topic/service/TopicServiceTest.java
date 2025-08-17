@@ -23,15 +23,15 @@ class TopicServiceTest extends IntegrationTest {
     @BeforeEach
     void setUp() {
         Topic genesis = Topic.builder()
-                .title("Genesis")
+                .bookTitle("Genesis")
                 .build();
 
         Topic john = Topic.builder()
-                .title("John")
+                .bookTitle("John")
                 .build();
 
         Topic luke = Topic.builder()
-                .title("Luke")
+                .bookTitle("Luke")
                 .build();
 
         topicRepository.saveAll(List.of(genesis, john, luke));
@@ -49,7 +49,7 @@ class TopicServiceTest extends IntegrationTest {
 
         Assertions.assertThat(topicsResponseList.topics())
                 .hasSize(3)
-                .extracting(TopicResponse::title)
+                .extracting(TopicResponse::bookTitle)
                 .containsExactly("Genesis", "John", "Luke");
     }
 }
