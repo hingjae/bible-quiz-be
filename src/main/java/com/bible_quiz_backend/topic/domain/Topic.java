@@ -1,10 +1,7 @@
 package com.bible_quiz_backend.topic.domain;
 
 import com.bible_quiz_backend.common.config.jpa.BaseTimeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +16,9 @@ public class Topic extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private Testament testament;
+
     private String question;
 
     private String bookFileName;
@@ -26,8 +26,8 @@ public class Topic extends BaseTimeEntity {
     private String bookTitle;
 
     @Builder
-    public Topic(Long id, String question, String bookFileName, String bookTitle) {
-        this.id = id;
+    public Topic(Testament testament, String question, String bookFileName, String bookTitle) {
+        this.testament = testament;
         this.question = question;
         this.bookFileName = bookFileName;
         this.bookTitle = bookTitle;
