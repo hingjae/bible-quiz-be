@@ -13,6 +13,7 @@ public class TopicMapper {
         List<TopicResponse> topicResponseList = topics.stream()
                 .map(topic -> TopicResponse.builder()
                         .id(topic.getId())
+                        .testament(topic.getTestament())
                         .question(topic.getQuestion())
                         .bookTitle(topic.getBookTitle())
                         .build())

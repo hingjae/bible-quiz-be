@@ -11,7 +11,9 @@ class JsonUtilsTest {
     @Test
     void parseOptions_json문자열로_입력하면_List로반환한다2() {
         // given
-        String json = "[\"자기 집에\", \"유다의 집에\", \"친구 아둘람 사람 히라의 집에\", \"아버지 집에\"]";
+        String json = """
+                 ["자기 집에", "유다의 집에", "친구 아둘람 사람 히라의 집에", "아버지 집에"]
+                """;
 
         // when
         List<String> result = JsonUtils.parseOptions(json);
@@ -29,7 +31,10 @@ class JsonUtilsTest {
     @Test
     void parseOptions_json문자열로_입력하면_List로반환한다() {
         // given
-        String json = "[\"A\", \"B\", \"C\", \"D\"]";
+//        String json = "[\"A\", \"B\", \"C\", \"D\"]";
+        String json = """
+                ["A", "B", "C", "D"]
+                """;
 
         // when
         List<String> result = JsonUtils.parseOptions(json);
