@@ -19,7 +19,7 @@ public class QuizController {
     @GetMapping("/api/quizzes")
     public ApiResponse<QuizResponseList> getAllQuizzes(@ModelAttribute QuizSearch quizSearch){
         QuizResponseList quizResponseList = quizService.findByParam(quizSearch);
-        log.info("Quizzes found with search: {}", quizSearch.getTopicId());
+        log.info("Quizzes found with search: {}", quizSearch.topicId());
         return ApiResponse.ok(quizResponseList);
     }
 }

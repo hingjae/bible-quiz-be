@@ -26,8 +26,8 @@ public class QuizService {
     private final QuizMapper quizMapper;
 
     public QuizResponseList findByParam(QuizSearch quizSearch) {
-        PageRequest pageRequest = PageRequest.of(0, quizSearch.getSize(), Sort.by(Sort.Direction.DESC, "id"));
-        List<Quiz> quizzes = quizRepository.findAllByTopic_Id(quizSearch.getTopicId(), pageRequest);
+        PageRequest pageRequest = PageRequest.of(0, quizSearch.size(), Sort.by(Sort.Direction.DESC, "id"));
+        List<Quiz> quizzes = quizRepository.findAllByTopic_Id(quizSearch.topicId(), pageRequest);
         return quizMapper.toQuizResponseList(quizzes);
     }
 
