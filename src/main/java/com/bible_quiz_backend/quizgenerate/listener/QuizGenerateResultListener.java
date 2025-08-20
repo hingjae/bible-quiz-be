@@ -3,6 +3,7 @@ package com.bible_quiz_backend.quizgenerate.listener;
 import com.bible_quiz_backend.common.utils.JsonUtils;
 import com.bible_quiz_backend.quiz.service.QuizService;
 import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateMessage;
+import com.bible_quiz_backend.topic.service.DailyTopicService;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,8 @@ public class QuizGenerateResultListener {
 
     private final QuizService quizService;
 
+    private final DailyTopicService dailyTopicService;
+
     @Transactional
     @SqsListener("${aws.queue-name}")
     public void receiveMessage(String message) {
@@ -25,6 +28,6 @@ public class QuizGenerateResultListener {
 
         quizService.saveAllFromMessage(quizGenerateMessage);
 
-        log.info("quiz generate result: {}", quizGenerateMessage.topicId());
+        dailyTopicService.save(quizGenerateMessage.topicId());
     }
 }

@@ -19,3 +19,11 @@ CREATE TABLE quiz (
     created_at DATETIME NOT NULL,
     CONSTRAINT fk_quiz_topic FOREIGN KEY (topic_id) REFERENCES topic(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE daily_topic (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    topic_id BIGINT NOT NULL,
+    date DATE NOT NULL,
+    created_at DATETIME NOT NULL,
+    CONSTRAINT fk_daily_topic_topic FOREIGN KEY (topic_id) REFERENCES topic (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
