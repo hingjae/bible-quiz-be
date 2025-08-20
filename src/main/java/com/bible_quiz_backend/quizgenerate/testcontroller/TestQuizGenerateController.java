@@ -3,7 +3,8 @@ package com.bible_quiz_backend.quizgenerate.testcontroller;
 import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateProduceMessageBody;
 import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateRequest;
 import com.bible_quiz_backend.quizgenerate.mapper.QuizGenerateMapper;
-import com.bible_quiz_backend.quizgenerate.service.QuizGenerateProducer;
+import com.bible_quiz_backend.quizgenerate.producer.QuizGenerateProducer;
+import com.bible_quiz_backend.quizgenerate.service.QuizGenerateService;
 import com.bible_quiz_backend.topic.domain.Topic;
 import com.bible_quiz_backend.topic.service.TopicService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class TestQuizGenerateController {
     private final TopicService topicService;
     private final QuizGenerateMapper quizGenerateMapper;
     private final QuizGenerateProducer quizGenerateProducer;
+    private final QuizGenerateService quizGenerateService;
 
     @Value("${aws.quiz-result-queue-url}")
     private String resultQueueUrl;
@@ -30,6 +32,12 @@ public class TestQuizGenerateController {
         Topic topic = topicService.findById(request.topicId());
         QuizGenerateProduceMessageBody quizGenerateProduceMessageBody = quizGenerateMapper.toQuizGenerateMessageBody(resultQueueUrl, topic);
         quizGenerateProducer.send(quizGenerateProduceMessageBody);
+        return "success";
+    }
+
+    @PostMapping("/v2")
+    public String generateQuizV2() {
+        quizGenerateService.generateQuizzes();
         return "success";
     }
 }

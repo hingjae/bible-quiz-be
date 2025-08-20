@@ -1,15 +1,15 @@
-package com.bible_quiz_backend.quizgenerate.service;
+package com.bible_quiz_backend.quizgenerate.producer;
 
 import com.bible_quiz_backend.common.utils.JsonUtils;
 import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateProduceMessageBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 public class QuizGenerateProducer {
     private final SqsAsyncClient sqs;

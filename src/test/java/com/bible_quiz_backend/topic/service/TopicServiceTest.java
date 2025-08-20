@@ -1,55 +1,64 @@
 package com.bible_quiz_backend.topic.service;
 
-import com.bible_quiz_backend.IntegrationTest;
-import com.bible_quiz_backend.topic.controller.dto.TopicResponse;
-import com.bible_quiz_backend.topic.controller.dto.TopicResponseList;
+import com.bible_quiz_backend.quizgenerate.dto.SearchRandomTopicParam;
+import com.bible_quiz_backend.topic.domain.Testament;
 import com.bible_quiz_backend.topic.domain.Topic;
 import com.bible_quiz_backend.topic.repository.TopicRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-@Disabled
-class TopicServiceTest extends IntegrationTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-    @Autowired
-    private TopicRepository topicRepository;
+@ExtendWith(MockitoExtension.class)
+class TopicServiceTest {
 
-    @Autowired
+    @InjectMocks
     private TopicService topicService;
 
-    @BeforeEach
-    void setUp() {
-        Topic genesis = Topic.builder()
-                .bookTitle("Genesis")
-                .build();
-
-        Topic john = Topic.builder()
-                .bookTitle("John")
-                .build();
-
-        Topic luke = Topic.builder()
-                .bookTitle("Luke")
-                .build();
-
-        topicRepository.saveAll(List.of(genesis, john, luke));
-    }
-
-    @AfterEach
-    void tearDown() {
-        topicRepository.deleteAllInBatch();
-    }
+    @Mock
+    private TopicRepository topicRepository;
 
     @Test
-    @DisplayName("모든 Topic을 조회한다.")
-    void findAll() {
-        TopicResponseList topicsResponseList = topicService.findAll();
+    @DisplayName("랜덤 주제를 조회한다.")
+    void findRandomTopicTest() {
+        String newTestament = Testament.NEW.name();
+        String oldTestament = Testament.OLD.name();
+        int limit = 3;
 
-        Assertions.assertThat(topicsResponseList.topics())
-                .hasSize(3)
-                .extracting(TopicResponse::bookTitle)
-                .containsExactly("Genesis", "John", "Luke");
+        when(topicRepository.findRandomTopicsByTestament(oldTestament, limit)).thenReturn(randomOldTestamentTopics());
+        when(topicRepository.findRandomTopicsByTestament(newTestament, limit)).thenReturn(randomNewTestamentTopics());
+
+        List<Topic> randomTopics = topicService.findDailyRandomTopics(limit);
+
+        verify(topicRepository).findRandomTopicsByTestament(oldTestament, limit);
+        verify(topicRepository).findRandomTopicsByTestament(newTestament, limit);
+
+        assertThat(randomTopics).hasSize(6)
+                .extracting(Topic::getBookTitle)
+                .containsExactly("창세기", "민수기", "욥기", "마가복음", "요한복음", "사도행전");
+    }
+
+    private List<Topic> randomOldTestamentTopics() {
+        return List.of(
+                Topic.builder().bookTitle("창세기").testament(Testament.OLD).build(),
+                Topic.builder().bookTitle("민수기").testament(Testament.OLD).build(),
+                Topic.builder().bookTitle("욥기").testament(Testament.OLD).build()
+        );
+    }
+
+    private List<Topic> randomNewTestamentTopics() {
+        return List.of(
+                Topic.builder().bookTitle("마가복음").testament(Testament.NEW).build(),
+                Topic.builder().bookTitle("요한복음").testament(Testament.NEW).build(),
+                Topic.builder().bookTitle("사도행전").testament(Testament.NEW).build()
+        );
     }
 }

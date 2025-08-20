@@ -25,6 +25,6 @@ public class QuizGenerateResultListener {
 
         quizService.saveAllFromMessage(quizGenerateMessage);
 
-        log.info("quiz generate result: {}", quizGenerateMessage);
+        log.info("quiz generate result: {}", quizGenerateMessage.topicId());
     }
 }
