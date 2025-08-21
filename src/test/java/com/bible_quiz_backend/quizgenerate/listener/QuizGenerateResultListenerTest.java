@@ -1,8 +1,8 @@
 package com.bible_quiz_backend.quizgenerate.listener;
 
-import com.bible_quiz_backend.quiz.service.QuizService;
 import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateMessage;
 import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateResponse;
+import com.bible_quiz_backend.quizgenerate.service.QuizGenerateService;
 import com.bible_quiz_backend.topic.service.DailyTopicService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 class QuizGenerateResultListenerTest {
 
     @Mock
-    private QuizService quizService;
+    private QuizGenerateService quizGenerateService;
 
     @Mock
     private DailyTopicService dailyTopicService;
@@ -44,7 +44,7 @@ class QuizGenerateResultListenerTest {
 
         quizGenerateResultListener.receiveMessage(message);
 
-        verify(quizService).saveAllFromMessage(captor.capture());
+        verify(quizGenerateService).saveAllFromMessage(captor.capture());
         verify(dailyTopicService).save(1L);
 
         QuizGenerateMessage actual = captor.getValue();

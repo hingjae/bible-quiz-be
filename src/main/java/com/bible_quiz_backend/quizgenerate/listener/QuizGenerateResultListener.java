@@ -1,8 +1,8 @@
 package com.bible_quiz_backend.quizgenerate.listener;
 
 import com.bible_quiz_backend.common.utils.JsonUtils;
-import com.bible_quiz_backend.quiz.service.QuizService;
 import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateMessage;
+import com.bible_quiz_backend.quizgenerate.service.QuizGenerateService;
 import com.bible_quiz_backend.topic.service.DailyTopicService;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class QuizGenerateResultListener {
 
-    private final QuizService quizService;
+    private final QuizGenerateService quizGenerateService;
 
     private final DailyTopicService dailyTopicService;
 
@@ -26,7 +26,7 @@ public class QuizGenerateResultListener {
 
         QuizGenerateMessage quizGenerateMessage = JsonUtils.fromJson(message, QuizGenerateMessage.class);
 
-        quizService.saveAllFromMessage(quizGenerateMessage);
+        quizGenerateService.saveAllFromMessage(quizGenerateMessage);
 
         dailyTopicService.save(quizGenerateMessage.topicId());
     }
