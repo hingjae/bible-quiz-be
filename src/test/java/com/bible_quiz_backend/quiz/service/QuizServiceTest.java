@@ -5,6 +5,7 @@ import com.bible_quiz_backend.quiz.repository.QuizRepository;
 import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateMessage;
 import com.bible_quiz_backend.quizgenerate.dto.QuizGenerateResponse;
 import com.bible_quiz_backend.quizgenerate.mapper.QuizGenerateMapper;
+import com.bible_quiz_backend.quizgenerate.service.QuizGenerateService;
 import com.bible_quiz_backend.topic.domain.Topic;
 import com.bible_quiz_backend.topic.repository.TopicRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +34,7 @@ class QuizServiceTest {
     private TopicRepository topicRepository;
 
     @InjectMocks
-    private QuizService quizService;
+    private QuizGenerateService quizGenerateService;
 
     @Captor
     private ArgumentCaptor<List<Quiz>> captor;
@@ -52,7 +53,7 @@ class QuizServiceTest {
         when(quizGenerateMapper.toQuizzes(topic, message)).thenReturn(mapped);
         when(topicRepository.getReferenceById(1L)).thenReturn(topic);
 
-        quizService.saveAllFromMessage(message);
+        quizGenerateService.saveAllFromMessage(message);
 
         verify(quizRepository).saveAll(captor.capture());
 
