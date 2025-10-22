@@ -24,7 +24,7 @@ public class ProdCookieProvider implements CookieProvider {
                 .sameSite("None") // 크로스 사이트/서브도메인 간 요청에도 쿠키가 전송됨
                 .path("/") // 해당 도메인 내 모든 경로에 쿠키를 전송
                 .domain(host)
-                .maxAge(refreshTokenExpiration)
+                .maxAge(refreshTokenExpiration) // 7200초
                 .build();
     }
 
