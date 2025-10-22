@@ -56,6 +56,7 @@ aws:
   quiz-result-queue-url: ${AWS_QUIZ_RESULT_QUEUE_URL}
 server:
   port: ${SERVER_PORT}
+  forward-headers-strategy: framework # 애플리케이션이 실제 클라이언트 정보를 올바르게 파악하도록 하는 설정
 logging:
   file:
     name: /var/log/web.stdout.log
