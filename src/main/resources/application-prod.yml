@@ -61,3 +61,11 @@ logging:
     name: /var/log/web.stdout.log
   level:
     root: INFO
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
+  refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+  cookie-secure: false
+app:
+  frontend:
+    domain: https://www.jesuslovesquiz.com/
