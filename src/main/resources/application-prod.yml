@@ -69,4 +69,4 @@ jwt:
   cookie-secure: false
 app:
   frontend:
-    domain: https://www.jesuslovesquiz.com/
+    domain: https://jesuslovesquiz.com
