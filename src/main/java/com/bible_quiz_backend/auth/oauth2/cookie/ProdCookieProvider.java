@@ -34,12 +34,14 @@ public class ProdCookieProvider implements CookieProvider {
      */
     @Override
     public ResponseCookie createRefreshPresenceCookie(String domain) {
+        URI uri = URI.create(domain);
+        String host = uri.getHost();
         return ResponseCookie.from("rtp", "1")
                 .httpOnly(false) // JS에서 읽기 가능
                 .secure(true)
                 .sameSite("None")
                 .path("/")
-                .domain(domain)
+                .domain(host)
                 .maxAge(refreshTokenExpiration)
                 .build();
     }
