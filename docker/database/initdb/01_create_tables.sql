@@ -27,3 +27,13 @@ CREATE TABLE daily_topic (
     created_at DATETIME NOT NULL,
     CONSTRAINT fk_daily_topic_topic FOREIGN KEY (topic_id) REFERENCES topic (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE member (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    auth_provider VARCHAR(50) NOT NULL,
+    provider_id VARCHAR(255) NOT NULL,
+    refresh_token VARCHAR(512),
+    created_at DATETIME NOT NULL,
+    UNIQUE KEY uq_provider (auth_provider, provider_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
